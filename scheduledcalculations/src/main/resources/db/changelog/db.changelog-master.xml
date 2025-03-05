@@ -22,7 +22,7 @@
         </sql>
 
         <createTable tableName="calculation_result">
-            <column name="id" type="int">
+            <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="schedule_id" type="int"/>
