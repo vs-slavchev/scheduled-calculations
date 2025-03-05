@@ -14,6 +14,12 @@
             <column name="execution_times" type="timestamp[]"/>
             <column name="enabled" type="boolean" defaultValueBoolean="true"/>
         </createTable>
+        <addNotNullConstraint tableName="schedule" columnName="schedule_type"/>
+        <sql>
+            ALTER TABLE schedule
+            ADD CONSTRAINT chk_cron_or_execution_times
+            CHECK ((cron_string IS NOT NULL AND execution_times IS NULL) OR (cron_string IS NULL AND execution_times IS NOT NULL));
+        </sql>
 
         <createTable tableName="calculation_result">
             <column name="id" type="int">
@@ -31,25 +37,25 @@
                                  referencedTableName="schedule"
                                  referencedColumnNames="id"/>
 
+
         <sql splitStatements="false">
             CREATE OR REPLACE FUNCTION set_type_on_schedule_insert()
-            RETURNS TRIGGER
-            AS
+            RETURNS TRIGGER AS
             $$
             BEGIN
                 IF NEW.cron_string IS NOT NULL THEN
-                    SET NEW.schedule_type = 'CRON';
+                    NEW.schedule_type = 'CRON';
                 ELSE
-                    SET NEW.schedule_type = 'TIMESTAMP';
+                    NEW.schedule_type = 'TIMESTAMP';
                 END IF;
-            RETURN NEW;
+                RETURN NEW;
             END;
-            $$ LANGUAGE PLPGSQL
+            $$ LANGUAGE PLPGSQL;
         </sql>
 
         <sql>
             CREATE TRIGGER tr_set_type_on_schedule_insert
-            BEFORE INSERT
+            BEFORE INSERT OR UPDATE
             ON schedule
             FOR EACH ROW
             EXECUTE PROCEDURE set_type_on_schedule_insert();
