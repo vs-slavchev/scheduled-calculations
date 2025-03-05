@@ -31,7 +31,6 @@ Differences in the DB schedule are synced:
 - if a schedule is not DB but in the map (changed or removed) -> cancel task
 - if in both (no change) -> do nothing
 
-
 ### API service
 Endpoint to query calculations, returns schedule time and results
 - GET /api/v1/calculations

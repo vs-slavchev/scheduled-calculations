@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="202503052018" author="veselin">
+        <createTable tableName="schedule">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="schedule_type" type="text"/>
+            <column name="cron_string" type="text"/>
+            <column name="execution_times" type="timestamp[]"/>
+            <column name="enabled" type="boolean" defaultValueBoolean="true"/>
+        </createTable>
+
+        <createTable tableName="calculation_result">
+            <column name="id" type="int">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="schedule_id" type="int"/>
+            <column name="result" type="int"/>
+            <column name="started_at" type="timestamp" defaultValue="now()"/>
+            <column name="finished_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="calculation_result"
+                                 baseColumnNames="schedule_id"
+                                 constraintName="fk_schedule_id"
+                                 referencedTableName="schedule"
+                                 referencedColumnNames="id"/>
+
+        <sql splitStatements="false">
+            CREATE OR REPLACE FUNCTION set_type_on_schedule_insert()
+            RETURNS TRIGGER
+            AS
+            $$
+            BEGIN
+                IF NEW.cron_string IS NOT NULL THEN
+                    SET NEW.schedule_type = 'CRON';
+                ELSE
+                    SET NEW.schedule_type = 'TIMESTAMP';
+                END IF;
+            RETURN NEW;
+            END;
+            $$ LANGUAGE PLPGSQL
+        </sql>
+
+        <sql>
+            CREATE TRIGGER tr_set_type_on_schedule_insert
+            BEFORE INSERT
+            ON schedule
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_type_on_schedule_insert();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
