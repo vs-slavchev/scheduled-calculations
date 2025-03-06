@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -18,8 +21,9 @@ public class CalculationResult {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "schedule_id")
-    private Long scheduleId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
 
     @Column(name = "result")
     private int result;
@@ -41,12 +45,12 @@ public class CalculationResult {
         this.id = id;
     }
 
-    public Long getScheduleId() {
-        return scheduleId;
+    public Schedule getSchedule() {
+        return schedule;
     }
 
-    public void setScheduleId(Long scheduleId) {
-        this.scheduleId = scheduleId;
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 
     public int getResult() {
@@ -77,11 +81,11 @@ public class CalculationResult {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CalculationResult that = (CalculationResult) o;
-        return result == that.result && Objects.equals(id, that.id) && Objects.equals(scheduleId, that.scheduleId) && Objects.equals(startedAt, that.startedAt) && Objects.equals(finishedAt, that.finishedAt);
+        return result == that.result && Objects.equals(id, that.id) && Objects.equals(schedule, that.schedule) && Objects.equals(startedAt, that.startedAt) && Objects.equals(finishedAt, that.finishedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, scheduleId, result, startedAt, finishedAt);
+        return Objects.hash(id, schedule, result, startedAt, finishedAt);
     }
 }

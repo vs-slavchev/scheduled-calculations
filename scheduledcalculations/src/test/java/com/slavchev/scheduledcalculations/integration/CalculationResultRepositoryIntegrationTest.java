@@ -1,7 +1,9 @@
 package com.slavchev.scheduledcalculations.integration;
 
 import com.slavchev.scheduledcalculations.model.CalculationResult;
+import com.slavchev.scheduledcalculations.model.Schedule;
 import com.slavchev.scheduledcalculations.repository.CalculationResultRepository;
+import com.slavchev.scheduledcalculations.repository.ScheduleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class CalculationResultRepositoryIntegrationTest {
 
     @Autowired
     private CalculationResultRepository calculationResultRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     @Container
     @ServiceConnection
@@ -39,9 +43,13 @@ public class CalculationResultRepositoryIntegrationTest {
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void whenSavingCalculationResult_thenFindOne() {
+        Schedule schedule = new Schedule();
+        schedule.setCronString("59 59 23 31 12 7");
+        scheduleRepository.save(schedule);
         CalculationResult calculationResult = new CalculationResult();
         int result = 42;
         calculationResult.setResult(result);
+        calculationResult.setSchedule(schedule);
         calculationResult.setStartedAt(LocalDateTime.now().minusMinutes(1));
         calculationResult.setFinishedAt(LocalDateTime.now());
 

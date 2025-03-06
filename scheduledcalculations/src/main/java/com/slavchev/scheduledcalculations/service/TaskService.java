@@ -65,7 +65,7 @@ public class TaskService {
     private Runnable createTask(Schedule schedule, BiFunction<Integer, Integer, Integer> calculation) {
         return () -> {
             CalculationResult calculationResult = new CalculationResult();
-            calculationResult.setScheduleId(schedule.getId());
+            calculationResult.setSchedule(schedule);
             calculationResult.setStartedAt(LocalDateTime.now());
             calculationResultRepository.save(calculationResult);
 
