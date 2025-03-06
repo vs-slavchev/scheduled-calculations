@@ -25,6 +25,10 @@ public class ScheduleService {
         this.scheduledTasks = scheduledTasks;
     }
 
+    public Schedule addSchedule(Schedule schedule) {
+        return scheduleRepository.save(schedule);
+    }
+
     @Scheduled(fixedRateString = "${schedule.polling.milliseconds}")
     public void syncSchedule() {
         List<Schedule> polledSchedules = scheduleRepository.findByIsEnabledTrue();

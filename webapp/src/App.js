@@ -15,9 +15,26 @@ function App() {
       .catch(error => console.error('Error:', error));
   }, []);
 
+  const postSchedule = () => {
+    const schedule = document.getElementById('schedule-input').value;
+    fetch('http://localhost:8080/api/v1/schedule', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ scheduleString: schedule })
+    })
+      .then(response => console.log(response.ok ? 'Schedule added' : 'Error adding schedule'))
+      .catch(error => console.error('Error:', error));
+  }
+
 
   return (
     <div className="App">
+      <h1>Add schedule</h1>
+      <input type="text" id="schedule-input" placeholder="* * * * * * or yyyy-MM-dd HH:mm:ss, yyyy-MM-dd HH:mm:ss"/>
+      <button onClick={postSchedule}>Add schedule</button>
+
       <h1>Calculation results</h1>
       {results !== null && results.length > 0 &&
         <table>
