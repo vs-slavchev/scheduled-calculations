@@ -86,7 +86,19 @@ public class Schedule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, scheduleType, cronString, executionTimes.hashCode(),
+        return Objects.hash(id, scheduleType, cronString,
+                executionTimes == null ? 0 : executionTimes.hashCode(),
                 isEnabled);
+    }
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "id=" + id +
+                ", scheduleType='" + scheduleType + '\'' +
+                ", cronString='" + cronString + '\'' +
+                ", executionTimes=" + executionTimes +
+                ", isEnabled=" + isEnabled +
+                '}';
     }
 }

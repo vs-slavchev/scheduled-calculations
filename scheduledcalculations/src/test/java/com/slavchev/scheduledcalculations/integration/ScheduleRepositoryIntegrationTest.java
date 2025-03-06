@@ -1,4 +1,4 @@
-package com.slavchev.scheduledcalculations;
+package com.slavchev.scheduledcalculations.integration;
 
 import com.slavchev.scheduledcalculations.model.Schedule;
 import com.slavchev.scheduledcalculations.repository.ScheduleRepository;
@@ -16,6 +16,7 @@ import org.testcontainers.utility.DockerImageName;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -57,7 +58,7 @@ public class ScheduleRepositoryIntegrationTest {
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void whenSavingTimestampsSchedule_thenFindOneTimestampSchedule() {
         Schedule schedule = new Schedule();
-        LocalDateTime dateTime = LocalDateTime.now();
+        LocalDateTime dateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         schedule.setExecutionTimes(List.of(dateTime));
 
         scheduleRepository.save(schedule);

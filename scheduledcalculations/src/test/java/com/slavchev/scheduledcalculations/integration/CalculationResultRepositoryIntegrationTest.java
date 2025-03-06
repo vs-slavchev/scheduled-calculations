@@ -1,4 +1,4 @@
-package com.slavchev.scheduledcalculations;
+package com.slavchev.scheduledcalculations.integration;
 
 import com.slavchev.scheduledcalculations.model.CalculationResult;
 import com.slavchev.scheduledcalculations.repository.CalculationResultRepository;
