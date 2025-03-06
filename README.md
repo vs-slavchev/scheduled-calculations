@@ -57,4 +57,13 @@ The webapp, API service and DB are dockerized and easily runnable with docker-co
 ## Test plan
 -  unit tests on service and controller layers
 -  integration tests on repository layer
+-  integration tests on scheduling logic
 -  end-to-end tests
+
+## further improvement ideas
+- use websockets to display fresh data in webapp as new tasks complete
+- implement scheduling of new tasks, have a date picker in webapp
+- decouple task execution from scheduling by having separate workers
+- add monitoring
+- log and retry failed tasks
+- pagination when getting calculation results
